@@ -21,14 +21,14 @@ project( ycm_support_libs )
 set( CLIENT_LIB "ycm_client_support" )
 set( SERVER_LIB "ycm_core" )
 
-set( Python_ADDITIONAL_VERSIONS 2.7 2.6 )
-find_package( PythonLibs 2.6 REQUIRED )
+# set( Python_ADDITIONAL_VERSIONS 2.7 2.6 )
+# find_package( PythonLibs 2.6 REQUIRED )
 
-if ( NOT PYTHONLIBS_VERSION_STRING VERSION_LESS "3.0.0" )
-  message( FATAL_ERROR
-    "CMake found python3 libs instead of python2 libs. YCM works only with "
-    "python2.\n" )
-endif()
+# if ( NOT PYTHONLIBS_VERSION_STRING VERSION_LESS "3.0.0" )
+# message( FATAL_ERROR
+# "CMake found python3 libs instead of python2 libs. YCM works only with "
+# "python2.\n" )
+# endif()
 
 option( USE_DEV_FLAGS "Use compilation flags meant for YCM developers" OFF )
 option( USE_CLANG_COMPLETER "Use Clang semantic completer for C/C++/ObjC" OFF )

@@ -27,7 +27,8 @@ function homebrew_cmake_install {
 
 function python_finder {
   python_library="-DPYTHON_LIBRARY="
-  python_include="-DPYTHON_INCLUDE_DIR="
+  python_include="-DPYTHON_INCLUDE_DIRS="
+  python_include_two="-DPYTHON_INCLUDE_DIR="
 
   # The CMake 'FindPythonLibs' Module does not work properly.
   # So we are forced to do its job for it.
@@ -41,6 +42,8 @@ function python_finder {
     lib_python="${python_prefix}/lib/lib${which_python}"
     if [ -f "${lib_python}.a" ]; then
       python_library+="${lib_python}.a"
+    elif [ -f "${lib_python}.so" ]; then
+      python_library+="${lib_python}.so"
     elif [ -f "${lib_python}.dll.a" ]; then
       ## added a check for .dll.a files for CYGWIN
       python_library+="${lib_python}.dll.a"
@@ -48,9 +51,10 @@ function python_finder {
       python_library+="${lib_python}.dylib"
     fi
     python_include+="${python_prefix}/include/${which_python}"
+    python_include_two+="${python_prefix}/include/${which_python}"
   fi
 
-  echo "${python_library} ${python_include}"
+  echo "${python_library} ${python_include} ${python_include_two} "
 }
 
 function num_cores {
@@ -74,11 +78,12 @@ function install {
   build_dir=`mktemp -d -t ycm_build.XXXXXX`
   pushd $build_dir
 
-  if [[ `uname -s` == "Darwin" ]]; then
+  # if [[ `uname -s` == "Darwin" ]]; then
+    # echo "cmake -G \S"Unix Makefiles\" $(python_finder) "$@" . $ycm_dir/cpp"
     cmake -G "Unix Makefiles" $(python_finder) "$@" . $ycm_dir/cpp
-  else
-    cmake -G "Unix Makefiles" "$@" . $ycm_dir/cpp
-  fi
+  # else
+    # cmake -G "Unix Makefiles" "$@" . $ycm_dir/cpp
+  # fi
 
   make -j $(num_cores) ycm_support_libs
   popd
@@ -157,6 +162,7 @@ if ! command_exists cmake; then
 fi
 
 if [ -z "$YCM_TESTRUN" ]; then
+    echo $(python_finder)
   install $cmake_args $EXTRA_CMAKE_ARGS
 else
   testrun $cmake_args $EXTRA_CMAKE_ARGS
